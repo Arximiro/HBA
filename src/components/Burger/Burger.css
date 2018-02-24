@@ -35,3 +35,10 @@
     height: 300px;
   }
 }
+
+@media (max-width: 400px) {
+  .burger {
+    width: 65%;
+    height: 200px;
+  }
+}
