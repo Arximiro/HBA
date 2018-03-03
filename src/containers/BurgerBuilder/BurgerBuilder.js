@@ -26,7 +26,7 @@ class BurgerBuilder extends Component {
 
   async componentDidMount() {
     try {
-      const ingredients = await axios.get('https://hamburger-builder.firebaseio.com/ingredients.json');
+      const ingredients = await axios.get('/ingredients.json');
       this.setState({ ingredients: ingredients.data });
     } catch (e) {
     }    
@@ -40,30 +40,19 @@ class BurgerBuilder extends Component {
     this.setState({ purchasing: false });
   };
 
-  handleContinuePurchase = async () => {
-    this.setState({ loading: true });
-
-    const order = {
-      ingredients: this.state.ingredients,
-      price: this.state.totalPrice,
-      customer: {
-        name: 'David',
-        address: {
-          street: 'Cool Street',
-          zip: '12345',
-          country: 'US'
-        },
-        email: 'dr@test.com'
-      },
-      deliveryMethod: 'fastest'
-    };
-
-    try {
-      await axios.post('/orders.json', order);
-      this.setState({ loading: false, purchasing: false });
-    } catch (e) {
-      this.setState({ loading: false, purchasing: false });
+  handleContinuePurchase = () => {
+    const queryParams = [];
+    for (let i in this.state.ingredients) {
+      queryParams.push(`${encodeURIComponent(i)}=${encodeURIComponent(this.state.ingredients[i])}`);
+      // wrapping in encodedURIComponent adds space chars properly if needed
     }
+    queryParams.push(`price=${this.state.totalPrice}`);
+    const queryString = queryParams.join('&');
+    this.props.history.push({
+      pathname: '/checkout',
+      search: `?${queryString}`
+    });
+    // ingredients are passed to the checkout component via query params in the url, which are populated by this method.
   };
 
   handlePurchaseState = (ing) => {
