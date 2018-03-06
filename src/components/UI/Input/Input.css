@@ -24,3 +24,8 @@
 .inputElement:focus {
   background-color: #ccc;
 }
+
+.invalid {
+  border: 1px solid red;
+  background-color: rgb(243, 141, 129);
+}
